@@ -1,6 +1,8 @@
 # دليل وكيل Jules - نظام التطوير القصصي متعدد الوكلاء
 # Jules Agent Guide - Multi-Agent Storytelling Development System
 
+
+### دائما يجب ان  ترد على المستخدم باللغة العربية فقط ###
 ---
 
 ## نظرة عامة على المشروع / Project Overview
