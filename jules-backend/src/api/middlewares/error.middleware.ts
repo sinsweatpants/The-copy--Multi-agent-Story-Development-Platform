@@ -1,32 +1,32 @@
-import { FastifyError, FastifyRequest, FastifyReply } from 'fastify'
-import { logger } from '../../utils/logger'
+import { FastifyError, FastifyRequest, FastifyReply } from "fastify";
+import { logger } from "../../utils/logger";
 
 export async function errorHandler(
   error: FastifyError,
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ): Promise<void> {
   // Log the error
-  logger.error('Request error', {
+  logger.error("Request error", {
     error: error.message,
     stack: error.stack,
     url: request.url,
     method: request.method,
-    statusCode: error.statusCode
-  })
+    statusCode: error.statusCode,
+  });
 
   // Handle different error types
-  const statusCode = error.statusCode || 500
-  const message = statusCode === 500 ? 'Internal server error' : error.message
+  const statusCode = error.statusCode || 500;
+  const message = statusCode === 500 ? "Internal server error" : error.message;
 
   reply.status(statusCode).send({
-    error: error.name || 'Error',
+    error: error.name || "Error",
     message,
     statusCode,
-    timestamp: new Date().toISOString()
-  })
+    timestamp: new Date().toISOString(),
+  });
 }
 
 export function setupErrorHandler(fastify: any): void {
-  fastify.setErrorHandler(errorHandler)
+  fastify.setErrorHandler(errorHandler);
 }

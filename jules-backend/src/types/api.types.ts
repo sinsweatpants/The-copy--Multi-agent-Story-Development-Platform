@@ -52,10 +52,9 @@ export interface PhaseComplete {
 }
 
 export interface WebSocketEvents {
-  'progress': ProgressUpdate;
-  'phase_complete': PhaseComplete;
-  'error': ErrorResponse;
-  'echo': WebSocketMessage;
-  'pong': { timestamp: string };
+  progress: ProgressUpdate;
+  phase_complete: PhaseComplete;
+  error: ErrorResponse;
+  echo: WebSocketMessage;
+  pong: { timestamp: string };
 }
-

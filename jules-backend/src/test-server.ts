@@ -1,29 +1,28 @@
-import Fastify from 'fastify'
-import { config } from './config'
+import Fastify from "fastify";
+import { config } from "./config";
 
 const app = Fastify({
-  logger: true
-})
+  logger: true,
+});
 
 // Health check
-app.get('/health', async (request, reply) => {
-  return { 
-    status: 'ok', 
+app.get("/health", async (request, reply) => {
+  return {
+    status: "ok",
     timestamp: new Date().toISOString(),
     environment: config.environment,
-    version: config.appVersion
-  }
-})
+    version: config.appVersion,
+  };
+});
 
 const start = async () => {
   try {
-    await app.listen({ port: config.port, host: config.host })
-    console.log(`🚀 Server running on http://${config.host}:${config.port}`)
+    await app.listen({ port: config.port, host: config.host });
+    console.log(`🚀 Server running on http://${config.host}:${config.port}`);
   } catch (err) {
-    console.error(err)
-    process.exit(1)
+    console.error(err);
+    process.exit(1);
   }
-}
+};
 
-start()
-
+start();

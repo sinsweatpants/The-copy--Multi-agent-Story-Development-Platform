@@ -1,25 +1,28 @@
-import { AgentType } from '../../types/agent.types'
-import { CreativeBrief } from '../../types/session.types'
+import { AgentType } from "../../types/agent.types";
+import { CreativeBrief } from "../../types/session.types";
 
 export class PromptBuilder {
   static buildAgentPrompt(
     agentType: AgentType,
     guideContent: string,
     context: {
-      creativeBrief?: CreativeBrief
-      idea?: any
-      sessionData?: any
-      phase?: string
-    }
+      creativeBrief?: CreativeBrief;
+      idea?: any;
+      sessionData?: any;
+      phase?: string;
+    },
   ): string {
-    const basePrompt = this.getBasePrompt(agentType, guideContent)
-    const contextPrompt = this.buildContextPrompt(context)
-    const taskPrompt = this.getTaskPrompt(agentType, context.phase)
-    
-    return `${basePrompt}\n\n${contextPrompt}\n\n${taskPrompt}`
+    const basePrompt = this.getBasePrompt(agentType, guideContent);
+    const contextPrompt = this.buildContextPrompt(context);
+    const taskPrompt = this.getTaskPrompt(agentType, context.phase);
+
+    return `${basePrompt}\n\n${contextPrompt}\n\n${taskPrompt}`;
   }
 
-  private static getBasePrompt(agentType: AgentType, guideContent: string): string {
+  private static getBasePrompt(
+    agentType: AgentType,
+    guideContent: string,
+  ): string {
     return `أنت ${this.getAgentName(agentType)} في نظام Jules للتطوير القصصي متعدد الوكلاء.
 
 ${guideContent}
@@ -29,18 +32,18 @@ ${guideContent}
 2. تقديم تحليل عميق ومفصل
 3. استخدام اللغة العربية في جميع استجاباتك
 4. التركيز على الجودة والوضوح
-5. تقديم توصيات قابلة للتنفيذ`
+5. تقديم توصيات قابلة للتنفيذ`;
   }
 
   private static buildContextPrompt(context: any): string {
-    let contextPrompt = "## السياق الحالي:\n"
-    
+    let contextPrompt = "## السياق الحالي:\n";
+
     if (context.creativeBrief) {
       contextPrompt += `\n### الموجز الإبداعي:
 - الفكرة الأساسية: ${context.creativeBrief.coreIdea}
 - النوع الأدبي: ${context.creativeBrief.genre}
-- الجمهور المستهدف: ${context.creativeBrief.targetAudience || 'غير محدد'}
-- المواضيع: ${context.creativeBrief.themes.join(', ')}`
+- الجمهور المستهدف: ${context.creativeBrief.targetAudience || "غير محدد"}
+- المواضيع: ${context.creativeBrief.themes.join(", ")}`;
     }
 
     if (context.idea) {
@@ -48,17 +51,17 @@ ${guideContent}
 - العنوان: ${context.idea.title}
 - المحتوى: ${context.idea.content}
 - النوع: ${context.idea.genre}
-- المواضيع: ${context.idea.themes?.join(', ') || 'غير محدد'}`
+- المواضيع: ${context.idea.themes?.join(", ") || "غير محدد"}`;
     }
 
     if (context.sessionData) {
       contextPrompt += `\n### بيانات الجلسة:
 - حالة الجلسة: ${context.sessionData.status}
 - المرحلة الحالية: ${context.sessionData.currentPhase}
-- التقدم: ${context.sessionData.progress?.progress || 0}%`
+- التقدم: ${context.sessionData.progress?.progress || 0}%`;
     }
 
-    return contextPrompt
+    return contextPrompt;
   }
 
   private static getTaskPrompt(agentType: AgentType, phase?: string): string {
@@ -67,10 +70,12 @@ ${guideContent}
       idea_generation: "قم بتطوير وتحسين الأفكار المولدة",
       review: "قم بمراجعة الفكرة المطروحة وتقديم تقييم مفصل",
       tournament: "قم بتحليل الحجج وتقديم رأي مدعوم",
-      decision: "قم بتحليل جميع العوامل واتخاذ قرار مدروس"
-    }
+      decision: "قم بتحليل جميع العوامل واتخاذ قرار مدروس",
+    };
 
-    const baseTask = phaseTasks[phase as keyof typeof phaseTasks] || "قم بتنفيذ مهمتك المتخصصة"
+    const baseTask =
+      phaseTasks[phase as keyof typeof phaseTasks] ||
+      "قم بتنفيذ مهمتك المتخصصة";
 
     const specificTasks = {
       story_architect: "ركز على البنية السردية وتطوير الحبكة",
@@ -83,10 +88,10 @@ ${guideContent}
       theme_agent: "ركز على الموضوعات والرسائل",
       genre_tone: "ركز على النوع الأدبي والأسلوب",
       pacing_agent: "ركز على الإيقاع والسرعة",
-      conflict_tension: "ركز على الصراعات والتوتر"
-    }
+      conflict_tension: "ركز على الصراعات والتوتر",
+    };
 
-    return `${baseTask}. ${specificTasks[agentType]}.`
+    return `${baseTask}. ${specificTasks[agentType]}.`;
   }
 
   private static getAgentName(agentType: AgentType): string {
@@ -101,10 +106,10 @@ ${guideContent}
       theme_agent: "وكيل الموضوعات",
       genre_tone: "خبير النوع والأسلوب",
       pacing_agent: "وكيل الإيقاع",
-      conflict_tension: "وكيل الصراع والتوتر"
-    }
+      conflict_tension: "وكيل الصراع والتوتر",
+    };
 
-    return names[agentType] || agentType
+    return names[agentType] || agentType;
   }
 
   static buildIdeaGenerationPrompt(creativeBrief: CreativeBrief): string {
@@ -113,8 +118,8 @@ ${guideContent}
 ## الموجز الإبداعي:
 - الفكرة الأساسية: ${creativeBrief.coreIdea}
 - النوع الأدبي: ${creativeBrief.genre}
-- الجمهور المستهدف: ${creativeBrief.targetAudience || 'غير محدد'}
-- المواضيع: ${creativeBrief.themes.join(', ')}
+- الجمهور المستهدف: ${creativeBrief.targetAudience || "غير محدد"}
+- المواضيع: ${creativeBrief.themes.join(", ")}
 
 ## المتطلبات:
 1. كل فكرة يجب أن تكون مكتملة ومفصلة
@@ -132,10 +137,14 @@ ${guideContent}
 ### الفكرة الأولى: [العنوان]
 ### الفكرة الثانية: [العنوان]
 
-تأكد من أن كل فكرة مكتملة ومفصلة وقابلة للتطوير.`
+تأكد من أن كل فكرة مكتملة ومفصلة وقابلة للتطوير.`;
   }
 
-  static buildReviewPrompt(agentType: AgentType, idea: any, guideContent: string): string {
+  static buildReviewPrompt(
+    agentType: AgentType,
+    idea: any,
+    guideContent: string,
+  ): string {
     return `بصفتك ${this.getAgentName(agentType)}، قم بمراجعة الفكرة التالية وفقاً لدليلك المتخصص:
 
 ${guideContent}
@@ -144,7 +153,7 @@ ${guideContent}
 - العنوان: ${idea.title}
 - المحتوى: ${idea.content}
 - النوع: ${idea.genre}
-- المواضيع: ${idea.themes?.join(', ') || 'غير محدد'}
+- المواضيع: ${idea.themes?.join(", ") || "غير محدد"}
 
 ## مطلوب منك:
 1. تقييم شامل للفكرة من منظور تخصصك
@@ -161,10 +170,15 @@ ${guideContent}
 ### نقاط القوة: [قائمة مفصلة]
 ### نقاط الضعف: [قائمة مفصلة]
 ### التوصيات: [توصيات قابلة للتنفيذ]
-### التبرير: [شرح مفصل لتقييمك]`
+### التبرير: [شرح مفصل لتقييمك]`;
   }
 
-  static buildTournamentPrompt(agentType: AgentType, idea: any, previousArguments: any[], guideContent: string): string {
+  static buildTournamentPrompt(
+    agentType: AgentType,
+    idea: any,
+    previousArguments: any[],
+    guideContent: string,
+  ): string {
     return `بصفتك ${this.getAgentName(agentType)}، شارك في النقاش حول الفكرة التالية:
 
 ${guideContent}
@@ -175,7 +189,7 @@ ${guideContent}
 - النوع: ${idea.genre}
 
 ## الحجج المقدمة حتى الآن:
-${arguments.map((arg, index) => `${index + 1}. ${arg.agentName}: ${arg.content}`).join('\n')}
+${arguments.map((arg, index) => `${index + 1}. ${arg.agentName}: ${arg.content}`).join("\n")}
 
 ## مطلوب منك:
 1. قدم حجة قوية مدعومة بالأدلة
@@ -188,6 +202,6 @@ ${arguments.map((arg, index) => `${index + 1}. ${arg.agentName}: ${arg.content}`
 ### موقفي: [دعم/معارضة/محايد]
 ### حجتي: [حجة مفصلة ومدعومة]
 ### الأدلة: [أدلة من الفكرة أو المعرفة العامة]
-### الرد على الحجج السابقة: [إذا لزم الأمر]`
+### الرد على الحجج السابقة: [إذا لزم الأمر]`;
   }
 }

@@ -1,12 +1,16 @@
-import { PrismaClient } from '@prisma/client'
-import { CreateSessionInput, SessionStatus, SessionPhase } from '@/types/session.types'
-import { logger } from '@/utils/logger'
+import { PrismaClient } from "@prisma/client";
+import {
+  CreateSessionInput,
+  SessionStatus,
+  SessionPhase,
+} from "@/types/session.types";
+import { logger } from "@/utils/logger";
 
 export class SessionService {
-  private prisma: PrismaClient
+  private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
-    this.prisma = prisma
+    this.prisma = prisma;
   }
 
   async createSession(userId: string, brief: CreateSessionInput) {
@@ -21,20 +25,20 @@ export class SessionService {
               coreIdea: brief.coreIdea,
               genre: brief.genre,
               targetAudience: brief.targetAudience,
-              themes: brief.themes
-            }
-          }
+              themes: brief.themes,
+            },
+          },
         },
         include: {
-          creativeBrief: true
-        }
-      })
+          creativeBrief: true,
+        },
+      });
 
-      logger.info('Session created', { sessionId: session.id, userId })
-      return session
+      logger.info("Session created", { sessionId: session.id, userId });
+      return session;
     } catch (error) {
-      logger.error('Failed to create session', { error, userId })
-      throw error
+      logger.error("Failed to create session", { error, userId });
+      throw error;
     }
   }
 
@@ -43,7 +47,7 @@ export class SessionService {
       const session = await this.prisma.session.findFirst({
         where: {
           id: sessionId,
-          userId
+          userId,
         },
         include: {
           creativeBrief: true,
@@ -51,18 +55,18 @@ export class SessionService {
           ideas: true,
           reviews: true,
           tournament: true,
-          finalDecision: true
-        }
-      })
+          finalDecision: true,
+        },
+      });
 
       if (!session) {
-        throw new Error('Session not found')
+        throw new Error("Session not found");
       }
 
-      return session
+      return session;
     } catch (error) {
-      logger.error('Failed to get session', { error, sessionId, userId })
-      throw error
+      logger.error("Failed to get session", { error, sessionId, userId });
+      throw error;
     }
   }
 
@@ -70,16 +74,16 @@ export class SessionService {
     try {
       const sessions = await this.prisma.session.findMany({
         where: { userId },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         include: {
-          creativeBrief: true
-        }
-      })
+          creativeBrief: true,
+        },
+      });
 
-      return sessions
+      return sessions;
     } catch (error) {
-      logger.error('Failed to get user sessions', { error, userId })
-      throw error
+      logger.error("Failed to get user sessions", { error, userId });
+      throw error;
     }
   }
 
@@ -87,14 +91,18 @@ export class SessionService {
     try {
       const session = await this.prisma.session.update({
         where: { id: sessionId },
-        data: { status }
-      })
+        data: { status },
+      });
 
-      logger.info('Session status updated', { sessionId, status })
-      return session
+      logger.info("Session status updated", { sessionId, status });
+      return session;
     } catch (error) {
-      logger.error('Failed to update session status', { error, sessionId, status })
-      throw error
+      logger.error("Failed to update session status", {
+        error,
+        sessionId,
+        status,
+      });
+      throw error;
     }
   }
 
@@ -102,14 +110,18 @@ export class SessionService {
     try {
       const session = await this.prisma.session.update({
         where: { id: sessionId },
-        data: { currentPhase: phase }
-      })
+        data: { currentPhase: phase },
+      });
 
-      logger.info('Session phase updated', { sessionId, phase })
-      return session
+      logger.info("Session phase updated", { sessionId, phase });
+      return session;
     } catch (error) {
-      logger.error('Failed to update session phase', { error, sessionId, phase })
-      throw error
+      logger.error("Failed to update session phase", {
+        error,
+        sessionId,
+        phase,
+      });
+      throw error;
     }
   }
 
@@ -118,14 +130,14 @@ export class SessionService {
       await this.prisma.session.deleteMany({
         where: {
           id: sessionId,
-          userId
-        }
-      })
+          userId,
+        },
+      });
 
-      logger.info('Session deleted', { sessionId, userId })
+      logger.info("Session deleted", { sessionId, userId });
     } catch (error) {
-      logger.error('Failed to delete session', { error, sessionId, userId })
-      throw error
+      logger.error("Failed to delete session", { error, sessionId, userId });
+      throw error;
     }
   }
 }

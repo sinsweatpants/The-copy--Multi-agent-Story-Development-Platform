@@ -15,14 +15,17 @@ export interface VoteBreakdown {
   totalVotes: number;
   idea1Votes: number;
   idea2Votes: number;
-  agentVotes: Record<string, {
-    agentId: string;
-    agentType: string;
-    agentName: string;
-    votedFor: 'idea1' | 'idea2';
-    reasoning: string;
-    confidence: number;
-  }>;
+  agentVotes: Record<
+    string,
+    {
+      agentId: string;
+      agentType: string;
+      agentName: string;
+      votedFor: "idea1" | "idea2";
+      reasoning: string;
+      confidence: number;
+    }
+  >;
   criteria: {
     quality: {
       idea1: number;
@@ -74,9 +77,8 @@ export interface DecisionAnalysis {
     averageScore: number;
     voteCount: number;
   };
-  winner: 'idea1' | 'idea2';
+  winner: "idea1" | "idea2";
   margin: number;
   confidence: number;
   reasoning: string;
 }
-

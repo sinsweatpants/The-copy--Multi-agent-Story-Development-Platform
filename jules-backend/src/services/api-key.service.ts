@@ -1,32 +1,32 @@
-import { PrismaClient } from '@prisma/client'
-import { encryptApiKey, decryptApiKey } from '@/utils/encryption'
-import { logger } from '@/utils/logger'
+import { PrismaClient } from "@prisma/client";
+import { encryptApiKey, decryptApiKey } from "@/utils/encryption";
+import { logger } from "@/utils/logger";
 
 export class ApiKeyService {
-  private prisma: PrismaClient
+  private prisma: PrismaClient;
 
   constructor(prisma: PrismaClient) {
-    this.prisma = prisma
+    this.prisma = prisma;
   }
 
   async createApiKey(userId: string, apiKey: string, keyName: string) {
     try {
-      const encryptedKey = encryptApiKey(apiKey)
-      
+      const encryptedKey = encryptApiKey(apiKey);
+
       const savedKey = await this.prisma.apiKey.create({
         data: {
           userId,
           keyName,
           encryptedKey,
-          isActive: true
-        }
-      })
+          isActive: true,
+        },
+      });
 
-      logger.info('API key created', { userId, keyName })
-      return savedKey
+      logger.info("API key created", { userId, keyName });
+      return savedKey;
     } catch (error) {
-      logger.error('Failed to create API key', { error, userId })
-      throw error
+      logger.error("Failed to create API key", { error, userId });
+      throw error;
     }
   }
 
@@ -35,20 +35,20 @@ export class ApiKeyService {
       const apiKeys = await this.prisma.apiKey.findMany({
         where: {
           userId,
-          isActive: true
+          isActive: true,
         },
         select: {
           id: true,
           keyName: true,
           createdAt: true,
-          lastUsedAt: true
-        }
-      })
+          lastUsedAt: true,
+        },
+      });
 
-      return apiKeys
+      return apiKeys;
     } catch (error) {
-      logger.error('Failed to get user API keys', { error, userId })
-      throw error
+      logger.error("Failed to get user API keys", { error, userId });
+      throw error;
     }
   }
 
@@ -57,29 +57,29 @@ export class ApiKeyService {
       const apiKey = await this.prisma.apiKey.findFirst({
         where: {
           userId,
-          isActive: true
+          isActive: true,
         },
         orderBy: {
-          createdAt: 'desc'
-        }
-      })
+          createdAt: "desc",
+        },
+      });
 
       if (!apiKey) {
-        return null
+        return null;
       }
 
-      const decryptedKey = decryptApiKey(apiKey.encryptedKey)
-      
+      const decryptedKey = decryptApiKey(apiKey.encryptedKey);
+
       // Update last used timestamp
       await this.prisma.apiKey.update({
         where: { id: apiKey.id },
-        data: { lastUsedAt: new Date() }
-      })
+        data: { lastUsedAt: new Date() },
+      });
 
-      return decryptedKey
+      return decryptedKey;
     } catch (error) {
-      logger.error('Failed to get active API key', { error, userId })
-      throw error
+      logger.error("Failed to get active API key", { error, userId });
+      throw error;
     }
   }
 
@@ -88,17 +88,17 @@ export class ApiKeyService {
       await this.prisma.apiKey.updateMany({
         where: {
           id: keyId,
-          userId
+          userId,
         },
         data: {
-          isActive: false
-        }
-      })
+          isActive: false,
+        },
+      });
 
-      logger.info('API key deleted', { keyId, userId })
+      logger.info("API key deleted", { keyId, userId });
     } catch (error) {
-      logger.error('Failed to delete API key', { error, keyId, userId })
-      throw error
+      logger.error("Failed to delete API key", { error, keyId, userId });
+      throw error;
     }
   }
 
@@ -107,14 +107,14 @@ export class ApiKeyService {
       const apiKey = await this.prisma.apiKey.findFirst({
         where: {
           userId,
-          isActive: true
-        }
-      })
+          isActive: true,
+        },
+      });
 
-      return !!apiKey
+      return !!apiKey;
     } catch (error) {
-      logger.error('Failed to validate API key', { error, userId })
-      return false
+      logger.error("Failed to validate API key", { error, userId });
+      return false;
     }
   }
 }

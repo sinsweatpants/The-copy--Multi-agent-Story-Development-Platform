@@ -39,4 +39,3 @@ export interface ApiKeyResponse {
   lastUsedAt?: Date;
   createdAt: Date;
 }
-
