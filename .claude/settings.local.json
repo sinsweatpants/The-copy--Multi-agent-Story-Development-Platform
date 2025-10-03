@@ -3,7 +3,11 @@
     "allow": [
       "Bash(test:*)",
       "Bash(chmod:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nإضافة ملفات البيئة الإنتاجية وتحسينات Docker\n\n- إضافة docker-compose.prod.yml للبيئة الإنتاجية\n- إنشاء Dockerfile محسّن للواجهة الأمامية مع Nginx\n- إضافة entrypoint.sh لتشغيل migrations تلقائياً\n- تحديث ملفات البيئة (.env.example و .env.production.example)\n- إضافة دليل النشر DEPLOYMENT.md (عربي/إنجليزي)\n- إضافة CLAUDE.md لتوجيه Claude Code\n- إضافة .dockerignore لتحسين حجم الصور\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(npm install)",
+      "Bash(npx prisma generate:*)"
     ],
     "deny": [],
     "ask": []

@@ -10,39 +10,53 @@ Jules is a multi-agent storytelling development platform that orchestrates 11 sp
 
 ## Essential Commands
 
+### ⚡ Quick Start (Recommended)
+```bash
+# Install everything
+npm install
+
+# Start the entire platform with one command
+npm start
+
+# Development mode with hot reload
+npm run dev
+```
+
+### Root Level Commands
+```bash
+npm start                     # Run full platform (auto-build if needed)
+npm run dev                   # Development mode (backend + frontend)
+npm run build                 # Build both backend and frontend
+npm run prisma:generate       # Generate Prisma client
+npm run prisma:migrate        # Run database migrations
+npm test                      # Run tests
+npm run lint                  # Lint all code
+npm run clean                 # Clean all builds and dependencies
+```
+
 ### Backend (jules-backend/)
 ```bash
-# Development
-npm run dev                    # Start development server with hot reload
+cd jules-backend
 
-# Database
+npm run dev                    # Start development server with hot reload
+npm run build                 # Compile TypeScript and resolve aliases
+npm start                     # Run production build
 npm run prisma:generate        # Generate Prisma client after schema changes
 npm run prisma:migrate         # Create and apply migrations
 npm run prisma:studio          # Open Prisma Studio GUI
-
-# Testing & Quality
 npm test                       # Run tests
-npm run test:watch            # Run tests in watch mode
-npm run test:coverage         # Run tests with coverage report
 npm run lint                  # Check for linting errors
 npm run lint:fix              # Auto-fix linting errors
 npm run type-check            # Type check without emitting files
-
-# Build
-npm run build                 # Compile TypeScript and resolve aliases
-npm start                     # Run production build
 ```
 
 ### Frontend (jules-frontend/)
 ```bash
-# Development
-npm run dev                   # Start Vite dev server
+cd jules-frontend
 
-# Build & Preview
+npm run dev                   # Start Vite dev server
 npm run build                 # Type check and build for production
 npm run preview              # Preview production build locally
-
-# Code Quality
 npm run lint                 # Check for linting errors
 npm run lint:fix             # Auto-fix linting errors
 npm run type-check           # Type check without emitting
@@ -50,11 +64,14 @@ npm run format               # Format code with Prettier
 npm run format:check         # Check formatting without changing files
 ```
 
-### Docker
+### Docker (Optional)
 ```bash
 # Full stack
 docker-compose up --build    # Build and start all services
 docker-compose down          # Stop all services
+
+# Production
+docker-compose -f docker-compose.prod.yml up --build -d
 
 # Individual services available: postgres, redis, backend, frontend
 ```
