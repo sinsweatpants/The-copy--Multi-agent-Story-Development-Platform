@@ -10,7 +10,7 @@ const logFormat = winston.format.combine(
 );
 
 const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
+  level: process.env['LOG_LEVEL'] || 'info',
   format: logFormat,
   defaultMeta: {
     service: 'jules-backend',
@@ -26,7 +26,7 @@ const logger = winston.createLogger({
 });
 
 // Add file transport in production
-if (process.env.NODE_ENV === 'production') {
+if (process.env['NODE_ENV'] === 'production') {
   logger.add(
     new winston.transports.File({
       filename: 'logs/error.log',
