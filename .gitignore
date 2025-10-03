@@ -29,6 +29,8 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+.cursor/
+.claude/
 *.swp
 *.swo
 *~
@@ -53,3 +55,8 @@ jules-backend/uploads/
 *.tmp
 *.temp
 .tmp/
+*.ini
+
+# Archives
+python-archive/
+*-archive/
