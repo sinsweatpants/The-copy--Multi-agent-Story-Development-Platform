@@ -17,6 +17,9 @@ COPY prisma ./prisma/
 # Install dependencies
 RUN npm ci --only=production && npm cache clean --force
 
+# Copy entrypoint script first
+COPY entrypoint.sh /app/entrypoint.sh
+
 # Copy source code
 COPY . .
 
@@ -26,8 +29,10 @@ RUN npx prisma generate
 # Build the application
 RUN npm run build
 
-# Create uploads directory
-RUN mkdir -p uploads && chown -R nextjs:nodejs uploads
+# Create uploads directory and set permissions for entrypoint
+RUN mkdir -p uploads && \
+    chmod +x /app/entrypoint.sh && \
+    chown -R nextjs:nodejs uploads /app/entrypoint.sh
 
 # Switch to non-root user
 USER nextjs
@@ -40,6 +45,6 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:8000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # Start the application
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "dist/server.js"]
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["dumb-init", "--", "node", "dist/server.js"]
 
